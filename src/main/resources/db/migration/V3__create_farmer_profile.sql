@@ -30,3 +30,4 @@ CREATE TABLE land_holdings (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE INDEX idx_land_profile ON land_holdings(farmer_profile_id);
+
