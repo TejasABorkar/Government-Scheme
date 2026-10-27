@@ -1,5 +1,5 @@
 CREATE TABLE users (
-                       id BIGSERIAL PRIMARY KEY,
+                       id BIGINT AUTO_INCREMENT PRIMARY KEY,
                        name VARCHAR(100) NOT NULL,
                        email VARCHAR(150) NOT NULL UNIQUE,
                        phone VARCHAR(15) NOT NULL UNIQUE,
@@ -13,3 +13,4 @@ CREATE TABLE users (
 
 CREATE INDEX idx_users_email ON users(email);
 CREATE INDEX idx_users_phone ON users(phone);
+
