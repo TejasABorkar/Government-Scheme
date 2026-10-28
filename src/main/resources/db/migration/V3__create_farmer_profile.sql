@@ -31,3 +31,4 @@ CREATE TABLE land_holdings (
 
 CREATE INDEX idx_land_profile ON land_holdings(farmer_profile_id);
 
+drop table

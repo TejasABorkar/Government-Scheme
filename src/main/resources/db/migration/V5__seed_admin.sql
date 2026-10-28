@@ -5,4 +5,8 @@ VALUES (
            'Admin User',
            'admin@krushisetu.com',
            '9000000000',
-           '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZ')
+           '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZ');
+
+
+DELETE FROM flyway_schema_history WHERE success = 0;
+DELETE FROM users WHERE email = 'admin@krushisetu.com';  -- only if a partial row exists
