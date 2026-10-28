@@ -1,5 +1,6 @@
 package com.govermentscheme.backend.scheme.service;
 
+import com.govermentscheme.backend.admin.service.AuditService;
 import com.govermentscheme.backend.common.exception.ApiException;
 import com.govermentscheme.backend.common.exception.ErrorCode;
 import com.govermentscheme.backend.i18n.TranslationResolver;
@@ -12,10 +13,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +28,7 @@ public class SchemeService {
     private final SchemeRepository schemeRepository;
     private final SchemeCategoryRepository categoryRepository;
     private final TranslationResolver translationResolver;
+    private final AuditService auditService;
 
     private static final String DISCLAIMER =
             "This information is indicative only. The official government portal is the authoritative source.";
@@ -82,10 +86,9 @@ public class SchemeService {
                 .grReference(request.getGrReference())
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
-                .isActive(false)  // Draft — admin activate karel
+                .isActive(false)
                 .build();
 
-        // Add translations
         for (SchemeTranslationRequest tr : request.getTranslations()) {
             SchemeTranslation translation = SchemeTranslation.builder()
                     .scheme(scheme)
@@ -99,6 +102,12 @@ public class SchemeService {
         }
 
         Scheme saved = schemeRepository.save(scheme);
+
+        // AUDIT LOG
+        auditService.log(getCurrentUserId(), "CREATE", "SCHEME", saved.getId(), null,
+                Map.of("name", saved.getTranslations().isEmpty() ? "" :
+                        saved.getTranslations().get(0).getName()));
+
         return toDetail(saved, lang, true);
     }
 
@@ -110,6 +119,12 @@ public class SchemeService {
         SchemeCategory category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new ApiException(ErrorCode.VALIDATION_ERROR, "Category not found"));
 
+        // Snapshot old values for audit
+        Map<String, Object> oldValues = Map.of(
+                "department", scheme.getDepartment() != null ? scheme.getDepartment() : "",
+                "officialUrl", scheme.getOfficialUrl()
+        );
+
         scheme.setLevel(request.getLevel());
         scheme.setCategory(category);
         scheme.setDepartment(request.getDepartment());
@@ -118,7 +133,6 @@ public class SchemeService {
         scheme.setStartDate(request.getStartDate());
         scheme.setEndDate(request.getEndDate());
 
-        // Update translations — existing update, nava add
         scheme.getTranslations().clear();
         for (SchemeTranslationRequest tr : request.getTranslations()) {
             scheme.getTranslations().add(SchemeTranslation.builder()
@@ -131,7 +145,14 @@ public class SchemeService {
                     .build());
         }
 
-        return toDetail(schemeRepository.save(scheme), lang, true);
+        Scheme saved = schemeRepository.save(scheme);
+
+        // AUDIT LOG
+        auditService.log(getCurrentUserId(), "UPDATE", "SCHEME", id, oldValues,
+                Map.of("department", saved.getDepartment() != null ? saved.getDepartment() : "",
+                        "officialUrl", saved.getOfficialUrl()));
+
+        return toDetail(saved, lang, true);
     }
 
     @Transactional
@@ -139,7 +160,12 @@ public class SchemeService {
         Scheme s = schemeRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ErrorCode.VALIDATION_ERROR, "Scheme not found"));
         s.setIsActive(true);
-        return toDetail(schemeRepository.save(s), "en", true);
+        Scheme saved = schemeRepository.save(s);
+
+        auditService.log(getCurrentUserId(), "ACTIVATE", "SCHEME", id,
+                Map.of("isActive", false), Map.of("isActive", true));
+
+        return toDetail(saved, "en", true);
     }
 
     @Transactional
@@ -147,14 +173,22 @@ public class SchemeService {
         Scheme s = schemeRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ErrorCode.VALIDATION_ERROR, "Scheme not found"));
         s.setIsActive(false);
-        return toDetail(schemeRepository.save(s), "en", true);
+        Scheme saved = schemeRepository.save(s);
+
+        auditService.log(getCurrentUserId(), "DEACTIVATE", "SCHEME", id,
+                Map.of("isActive", true), Map.of("isActive", false));
+
+        return toDetail(saved, "en", true);
     }
 
     @Transactional
     public void delete(Long id) {
         Scheme s = schemeRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ErrorCode.VALIDATION_ERROR, "Scheme not found"));
-        schemeRepository.delete(s);  // cascade translations
+        schemeRepository.delete(s);
+
+        auditService.log(getCurrentUserId(), "DELETE", "SCHEME", id,
+                Map.of("id", id), null);
     }
 
     @Transactional(readOnly = true)
@@ -270,5 +304,19 @@ public class SchemeService {
                 .disclaimer(DISCLAIMER)
                 .translations(statuses)
                 .build();
+    }
+
+    // ============================================
+    // HELPER
+    // ============================================
+
+    private Long getCurrentUserId() {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || auth.getPrincipal() == null) return null;
+        try {
+            return Long.valueOf(auth.getPrincipal().toString());
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 }
