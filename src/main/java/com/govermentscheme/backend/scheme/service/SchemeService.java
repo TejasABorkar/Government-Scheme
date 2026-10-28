@@ -250,9 +250,9 @@ public class SchemeService {
                 .orElse(null);
         String shortDesc = desc != null && desc.length() > 150
                 ? desc.substring(0, 150) + "..." : desc;
-        String categoryName = translationResolver.resolveCategory(s.getCategory().getTranslations(), lang)
-                .map(SchemeCategoryTranslation::getName)
-                .orElse(s.getCategory().getCode());
+
+        // Category name from code (safe, no lazy load)
+        String categoryName = s.getCategory() != null ? s.getCategory().getCode() : "General";
 
         return SchemeSummaryResponse.builder()
                 .id(s.getId())
@@ -270,6 +270,8 @@ public class SchemeService {
 
     private SchemeDetailResponse toDetail(Scheme s, String lang, boolean includeTranslationStatus) {
         SchemeTranslation tr = translationResolver.resolveScheme(s.getTranslations(), lang).orElse(null);
+
+        // Ethe category translations lazy load hotil, pan he method @Transactional madhe ahe tyamule safe ahe.
         String categoryName = translationResolver.resolveCategory(s.getCategory().getTranslations(), lang)
                 .map(SchemeCategoryTranslation::getName)
                 .orElse(s.getCategory().getCode());
