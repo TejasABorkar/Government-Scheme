@@ -14,6 +14,9 @@ i18n
     interpolation: {
       escapeValue: false,
     },
+    lng: localStorage.getItem('app_language') || 'mr',
+   debug: import.meta.env.DEV,
+
   });
 
 export default i18n;
