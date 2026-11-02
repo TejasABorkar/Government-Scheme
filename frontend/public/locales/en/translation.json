@@ -1,7 +1,10 @@
 {
   "app_name": "Government Scheme Portal",
   "nav": {
-    "home": "Home"
+    "home": "Home",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout"
   },
   "home": {
     "title": "Government Schemes for Farmers",
@@ -17,5 +20,15 @@
   "footer": {
     "disclaimer": "This is not a government website. Final information is on the official portal.",
     "rights": "All rights reserved."
-  }
+  },
+  "schemes": {
+  "title": "Government Schemes",
+  "search_placeholder": "Search schemes...",
+  "all": "All",
+  "central": "Central",
+  "state": "State",
+  "no_schemes": "No schemes found.",
+  "loading": "Loading...",
+  "view_details": "View Details"
+}
 }

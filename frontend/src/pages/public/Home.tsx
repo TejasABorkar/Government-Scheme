@@ -20,6 +20,7 @@ export default function Home() {
       </p>
 
       <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
+        {/* Fakt ekda Browse Schemes button thevla ahe */}
         <Link to="/schemes" className="w-full">
           <Button variant="primary" fullWidth>
             🔍 {t('home.browse_btn')}
