@@ -1,0 +1,21 @@
+{
+  "app_name": "Government Scheme Portal",
+  "nav": {
+    "home": "Home"
+  },
+  "home": {
+    "title": "Government Schemes for Farmers",
+    "subtitle": "Find the right scheme, check eligibility, and learn how to apply.",
+    "browse_btn": "Browse Schemes",
+    "login_btn": "Login"
+  },
+  "language": {
+    "mr": "मराठी",
+    "hi": "हिंदी",
+    "en": "English"
+  },
+  "footer": {
+    "disclaimer": "This is not a government website. Final information is on the official portal.",
+    "rights": "All rights reserved."
+  }
+}
