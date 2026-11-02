@@ -12,6 +12,31 @@
     "browse_btn": "Browse Schemes",
     "login_btn": "Login"
   },
+  "schemes": {
+    "title": "Government Schemes",
+    "search_placeholder": "Search schemes...",
+    "all": "All",
+    "central": "Central",
+    "state": "State",
+    "no_schemes": "No schemes found.",
+    "loading": "Loading...",
+    "view_details": "View Details"
+  },
+  "auth": {
+    "register_title": "Create New Account",
+    "login_title": "Login",
+    "name": "Full Name",
+    "email": "Email Address",
+    "phone": "Mobile Number",
+    "password": "Password",
+    "preferred_lang": "Preferred Language",
+    "submit_register": "Register",
+    "submit_login": "Login",
+    "already_have_account": "Already have an account?",
+    "dont_have_account": "Don't have an account?",
+    "register_now": "Register Now",
+    "login_now": "Login Now"
+  },
   "language": {
     "mr": "मराठी",
     "hi": "हिंदी",
@@ -21,14 +46,41 @@
     "disclaimer": "This is not a government website. Final information is on the official portal.",
     "rights": "All rights reserved."
   },
-  "schemes": {
-  "title": "Government Schemes",
-  "search_placeholder": "Search schemes...",
-  "all": "All",
-  "central": "Central",
-  "state": "State",
-  "no_schemes": "No schemes found.",
-  "loading": "Loading...",
-  "view_details": "View Details"
+  "profile": {
+    "title": "Your Profile",
+    "consent_title": "Consent",
+    "consent_text": "I consent to the use of my personal information (such as land, production) for eligibility checks.",
+    "personal_details": "Personal Details",
+    "location_details": "Location Details",
+    "land_details": "Land Details",
+    "category": "Social Category",
+    "gender": "Gender",
+    "age_group": "Age Group",
+    "income_range": "Annual Income",
+    "district": "District",
+    "taluka": "Taluka",
+    "village": "Village",
+    "area_hectares": "Area (Hectares)",
+    "crop_type": "Crop Type",
+    "save_profile": "Save Profile",
+    "profile_complete": "Profile Complete!",
+    "go_to_dashboard": "Go to Dashboard"
+  },
+  "admin": {
+  "add_scheme_title": "Add New Scheme",
+  "basic_details": "Basic Details",
+  "level": "Level",
+  "category": "Category",
+  "department": "Department",
+  "official_url": "Official URL",
+  "gr_reference": "GR Reference",
+  "en_translation": "English Translation",
+  "mr_translation": "Marathi Translation",
+  "hi_translation": "Hindi Translation",
+  "scheme_name": "Scheme Name",
+  "description": "Description",
+  "benefits": "Benefits",
+  "create_scheme": "Create Scheme (Draft)",
+  "saving": "Saving..."
 }
 }
